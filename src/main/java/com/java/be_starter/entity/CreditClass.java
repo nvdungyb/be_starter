@@ -3,10 +3,18 @@ package com.java.be_starter.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreditClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +39,7 @@ public class CreditClass {
 
     @NotBlank(message = "Total students can not be null")
     private Integer totalStudents;
+
+    @Version
+    private long version;
 }
