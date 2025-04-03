@@ -16,7 +16,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// todo: chua test api nao ca
 @RestController
 public class CreditClassController {
     private final CreditClassServiceImpl creditClassService;
@@ -28,7 +27,7 @@ public class CreditClassController {
     }
 
     @PostMapping("/api/classes")
-    public ResponseEntity<ApiResponse> createCreditClass(@RequestBody CreditClassCreationDto creditClassCreationDto, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<?>> createCreditClass(@RequestBody CreditClassCreationDto creditClassCreationDto, HttpServletRequest request) {
 
         CreditClass savedCreditClass = creditClassService.createCreditClass(creditClassCreationDto);
 
@@ -73,7 +72,7 @@ public class CreditClassController {
     }
 
     @GetMapping("/api/classes")
-    public ResponseEntity<ApiResponse<?>> getFirstPageClass(@PathVariable("id") long classId, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<?>> getFirstPageClass(HttpServletRequest request) {
         return getClassByPage(1, request);
     }
 

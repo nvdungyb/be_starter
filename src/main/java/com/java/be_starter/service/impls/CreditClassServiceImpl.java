@@ -6,6 +6,8 @@ import com.java.be_starter.entity.CreditClass;
 import com.java.be_starter.exceptions.EntityConfigException;
 import com.java.be_starter.exceptions.InvalidEntityException;
 import com.java.be_starter.repository.CreditClassRepository;
+import com.java.be_starter.repository.SubjectRepository;
+import com.java.be_starter.repository.TeacherRepository;
 import com.java.be_starter.service.CreditClassService;
 import com.java.be_starter.utils.mapper.CreditClassMapper;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,15 +24,26 @@ public class CreditClassServiceImpl implements CreditClassService {
     private final CreditClassRepository creditClassRepository;
     private final CreditClassMapper creditClassMapper;
     private static final int ELEMENTS_PER_PAGE = 10;
+    private final TeacherRepository teacherRepository;
+    private final SubjectRepository subjectRepository;
 
-    public CreditClassServiceImpl(CreditClassRepository creditClassRepository, CreditClassMapper creditClassMapper) {
+    public CreditClassServiceImpl(CreditClassRepository creditClassRepository, CreditClassMapper creditClassMapper, TeacherRepository teacherRepository, TeacherRepository teacherRepository1, SubjectRepository subjectRepository) {
         this.creditClassRepository = creditClassRepository;
         this.creditClassMapper = creditClassMapper;
+        this.teacherRepository = teacherRepository1;
+        this.subjectRepository = subjectRepository;
     }
 
     @Transactional
-    public CreditClass createCreditClass(CreditClassCreationDto creditClassCreationDto) {
-        CreditClass creditClass = creditClassMapper.toEntity(creditClassCreationDto);
+    public CreditClass createCreditClass(CreditClassCreationDto dto) {
+        if (teacherRepository.existsById(dto.getTeacherId())) {
+            throw new EntityNotFoundException("Teacher with id " + dto.getTeacherId() + " not found");
+        }
+        if (subjectRepository.existsById(dto.getSubjectId())) {
+            throw new EntityNotFoundException("Subject with id " + dto.getSubjectId() + " not found");
+        }
+
+        CreditClass creditClass = creditClassMapper.toEntity(dto);
 
         CreditClass savedCreditClass;
         try {
@@ -46,7 +59,7 @@ public class CreditClassServiceImpl implements CreditClassService {
     @Transactional
     public CreditClass updateClass(long classId, CreditClassUpdateDto creditClassUpdateDto) {
         CreditClass creditClass = creditClassRepository.findById(classId)
-                .orElseThrow(() -> new EntityNotFoundException(String.valueOf(classId)));
+                .orElseThrow(() -> new EntityNotFoundException("Class with ID: " + classId + " not found"));
 
         creditClass.setRoom(creditClassUpdateDto.getRoom() == null ? creditClass.getRoom() : creditClassUpdateDto.getRoom());
         creditClass.setStartTime(creditClassUpdateDto.getStartTime() == null ? creditClass.getStartTime() : creditClassUpdateDto.getStartTime());
