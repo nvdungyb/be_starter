@@ -31,4 +31,12 @@ public class ControllerAdvice {
                         .message(exception.getMessage())
                         .build());
     }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ApiResponse<?>> handleException(final Exception exception) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.builder()
+                        .message(exception.getMessage())
+                        .build());
+    }
 }
