@@ -26,4 +26,8 @@ public class Teacher {
 
     @NotBlank(message = "Department can not be null!")
     private String department;
+
+    public Teacher(long teacherId) {
+        this.id = teacherId;
+    }
 }

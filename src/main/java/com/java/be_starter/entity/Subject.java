@@ -24,4 +24,8 @@ public class Subject {
     private String subjectName;
 
     private String description;
+
+    public Subject(long subjectId) {
+        this.id = subjectId;
+    }
 }

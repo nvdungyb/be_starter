@@ -1,6 +1,8 @@
 package com.java.be_starter.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -37,7 +39,8 @@ public class CreditClass {
     @NotBlank(message = "Room can not be null")
     private String room;
 
-    @NotBlank(message = "Total students can not be null")
+    @Min(value = 1, message = "Total students can not be less than 1")
+    @Max(value = 110, message="Total students can not be greater than 110")
     private Integer totalStudents;
 
     @Version
