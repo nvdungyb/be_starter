@@ -2,23 +2,32 @@ package com.java.be_starter.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
-public class StudentCreditClass {
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class StudentClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "credit_class_id", nullable = false)
     private CreditClass creditClass;
 
-    @NotBlank(message = "Registration date can not be null")
-    private Date registationDate;
+    @NotNull(message = "Registration date can not be null")
+    private Date registrationDate;
 }

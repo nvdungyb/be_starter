@@ -40,9 +40,21 @@ public class CreditClass {
     private String room;
 
     @Min(value = 1, message = "Total students can not be less than 1")
-    @Max(value = 110, message="Total students can not be greater than 110")
+    @Max(value = 110, message = "Total students can not be greater than 110")
     private Integer totalStudents;
+
+    // This is not a good way to implement!
+//    @ManyToMany
+//    @JoinTable(name = "student_class",
+//            joinColumns = @JoinColumn(name = "class_id"),
+//            inverseJoinColumns = @JoinColumn(name = "student_id")
+//    )
+//    private Set<Student> studentList;
 
     @Version
     private long version;
+
+    public CreditClass(long classId) {
+        this.id = classId;
+    }
 }
