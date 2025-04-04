@@ -36,10 +36,10 @@ public class CreditClassServiceImpl implements CreditClassService {
 
     @Transactional
     public CreditClass createCreditClass(CreditClassCreationDto dto) {
-        if (teacherRepository.existsById(dto.getTeacherId())) {
+        if (!teacherRepository.existsById(dto.getTeacherId())) {
             throw new EntityNotFoundException("Teacher with id " + dto.getTeacherId() + " not found");
         }
-        if (subjectRepository.existsById(dto.getSubjectId())) {
+        if (!subjectRepository.existsById(dto.getSubjectId())) {
             throw new EntityNotFoundException("Subject with id " + dto.getSubjectId() + " not found");
         }
 
