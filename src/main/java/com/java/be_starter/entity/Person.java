@@ -37,4 +37,16 @@ public class Person {
     public Person(long id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "address='" + address + '\'' +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", dob=" + dob +
+                '}';
+    }
 }

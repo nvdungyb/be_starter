@@ -16,7 +16,7 @@ import lombok.*;
 public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int studentId;
+    private long studentId;
 
     @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "person_id", nullable = false, unique = true)
@@ -30,6 +30,20 @@ public class Student {
     @Max(value = 6, message = "Year must be at most 6")
     private Integer year;
 
-    @Version
-    private long version;
+//    @Version
+//    private long version;
+
+    public Student(long studentId) {
+        this.studentId = studentId;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "major='" + major + '\'' +
+                ", studentId=" + studentId +
+                ", person=" + person +
+                ", year=" + year +
+                '}';
+    }
 }
