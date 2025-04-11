@@ -1,4 +1,4 @@
-package com.java.be_starter.repository.dao.impls;
+package com.java.be_starter.repository.dao.impls.jdbc_template;
 
 import com.java.be_starter.dto.request.StudentCreationDto;
 import com.java.be_starter.dto.request.StudentUpdateDto;

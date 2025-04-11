@@ -4,6 +4,7 @@ import com.java.be_starter.dto.request.StudentCreationDto;
 import com.java.be_starter.dto.request.StudentUpdateDto;
 import com.java.be_starter.entity.Person;
 import com.java.be_starter.entity.Student;
+import com.java.be_starter.repository.dao.impls.jdbc_template.StudentDaoImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

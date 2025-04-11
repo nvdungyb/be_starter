@@ -1,4 +1,4 @@
-package com.java.be_starter.repository.dao.impls;
+package com.java.be_starter.repository.dao.impls.jdbc_template;
 
 import com.java.be_starter.entity.Person;
 import com.java.be_starter.exceptions.SaveEntityException;
