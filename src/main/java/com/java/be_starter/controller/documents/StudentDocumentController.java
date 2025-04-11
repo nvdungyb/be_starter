@@ -2,6 +2,8 @@ package com.java.be_starter.controller.documents;
 
 import com.java.be_starter.dto.request.StudentCreationDto;
 import com.java.be_starter.dto.request.StudentUpdateDto;
+import com.java.be_starter.dto.request.documents.StudentCreationDocumentDto;
+import com.java.be_starter.dto.request.documents.StudentUpdateDocumentDto;
 import com.java.be_starter.dto.response.ApiResponse;
 import com.java.be_starter.entity.documents.StudentMongo;
 import com.java.be_starter.service.documents.StudentMongoService;
@@ -22,7 +24,7 @@ public class StudentDocumentController {
     }
 
     @PostMapping("/api/documents/students")
-    public ResponseEntity<ApiResponse<?>> createStudentDocument(@RequestBody StudentCreationDto studentCreationDto, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<?>> createStudentDocument(@RequestBody StudentCreationDocumentDto studentCreationDto, HttpServletRequest request) {
         StudentMongo student = studentService.createStudent(studentCreationDto);
 
         return ResponseEntity.ok()
@@ -69,7 +71,7 @@ public class StudentDocumentController {
     }
 
     @PutMapping("/api/documents/students/{id}")
-    public ResponseEntity<ApiResponse<?>> updateStudent(@PathVariable("id") String studentId, @RequestBody StudentUpdateDto updateDto, HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<?>> updateStudent(@PathVariable("id") String studentId, @RequestBody StudentUpdateDocumentDto updateDto, HttpServletRequest request) {
         StudentMongo studentUpdated = studentService.updateStudent(studentId, updateDto);
 
         return ResponseEntity.ok()

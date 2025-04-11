@@ -1,9 +1,11 @@
 package com.java.be_starter.service.documents;
 
-import com.java.be_starter.dto.request.StudentCreationDto;
-import com.java.be_starter.dto.request.StudentUpdateDto;
+import com.java.be_starter.dto.request.documents.StudentCreationDocumentDto;
+import com.java.be_starter.dto.request.documents.StudentUpdateDocumentDto;
+import com.java.be_starter.entity.documents.Address;
 import com.java.be_starter.entity.documents.StudentMongo;
 import com.java.be_starter.repository.documents.StudentMongoRepository;
+import com.java.be_starter.utils.mapper.documents.StudentDocumentsMapper;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,21 +17,15 @@ import java.util.Optional;
 public class StudentMongoService {
     private final StudentMongoRepository studentMongoRepository;
     private final int ELEMENTS_PER_PATE = 5;
+    private final StudentDocumentsMapper studentDocumentsMapper;
 
-    public StudentMongoService(StudentMongoRepository studentMongoRepository) {
+    public StudentMongoService(StudentMongoRepository studentMongoRepository, StudentDocumentsMapper studentDocumentsMapper) {
         this.studentMongoRepository = studentMongoRepository;
+        this.studentDocumentsMapper = studentDocumentsMapper;
     }
 
-    public StudentMongo createStudent(StudentCreationDto dto) {
-        StudentMongo studentMongo = StudentMongo.builder()
-                .name(dto.getName())
-                .address(dto.getAddress())
-                .email(dto.getEmail())
-                .phone(dto.getPhone())
-                .dob(dto.getDob())
-                .year(dto.getYear())
-                .major(dto.getMajor())
-                .build();
+    public StudentMongo createStudent(StudentCreationDocumentDto dto) {
+        StudentMongo studentMongo = studentDocumentsMapper.toEntity(dto);
 
         return saveStudent(studentMongo);
     }
@@ -47,11 +43,15 @@ public class StudentMongoService {
         return studentMongoOptional.orElseThrow(() -> new EntityNotFoundException("Student with id: " + studentId + " not found"));
     }
 
-    public StudentMongo updateStudent(String studentId, StudentUpdateDto dto) {
+    public StudentMongo updateStudent(String studentId, StudentUpdateDocumentDto dto) {
         StudentMongo studentMongo = findStudentById(studentId);
 
         studentMongo.setName(dto.getName() == null ? studentMongo.getName() : dto.getName());
-        studentMongo.setAddress(dto.getAddress() == null ? studentMongo.getAddress() : dto.getAddress());
+        studentMongo.setAddress(Address.builder()
+                .street(dto.getStreet() == null ? studentMongo.getAddress().getStreet() : dto.getStreet())
+                .city(dto.getCity() == null ? studentMongo.getAddress().getCity() : dto.getCity())
+                .state(dto.getState() == null ? studentMongo.getAddress().getState() : dto.getState())
+                .build());
         studentMongo.setDob(dto.getDob() == null ? studentMongo.getDob() : dto.getDob());
         studentMongo.setYear(dto.getYear() == null ? studentMongo.getYear() : dto.getYear());
         studentMongo.setPhone(dto.getPhone() == null ? studentMongo.getPhone() : dto.getPhone());
