@@ -14,10 +14,10 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 
 @Component
-public class PersonDaoImpl implements PersonDao {
+public class PersonJdbcDaoImpl implements PersonDao {
     private final JdbcTemplate jdbcTemplate;
 
-    public PersonDaoImpl(JdbcTemplate jdbcTemplate) {
+    public PersonJdbcDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

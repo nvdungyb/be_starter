@@ -22,16 +22,16 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-public class StudentDaoImpl implements StudentDao {
+public class StudentJdbcDaoImpl implements StudentDao {
     private final JdbcTemplate jdbcTemplate;
-    private final PersonDaoImpl personDaoImpl;
+    private final PersonJdbcDaoImpl personJdbcDaoImpl;
     private final StudentRowMapper studentRowMapper;
     private final StudentMapper studentMapper;
     private final int ELEMENTS_PER_PAGE = 10;
 
-    public StudentDaoImpl(JdbcTemplate jdbcTemplate, PersonDaoImpl personDaoImpl, StudentRowMapper studentRowMapper, StudentMapper studentMapper) {
+    public StudentJdbcDaoImpl(JdbcTemplate jdbcTemplate, PersonJdbcDaoImpl personJdbcDaoImpl, StudentRowMapper studentRowMapper, StudentMapper studentMapper) {
         this.jdbcTemplate = jdbcTemplate;
-        this.personDaoImpl = personDaoImpl;
+        this.personJdbcDaoImpl = personJdbcDaoImpl;
         this.studentRowMapper = studentRowMapper;
         this.studentMapper = studentMapper;
     }
@@ -47,7 +47,7 @@ public class StudentDaoImpl implements StudentDao {
     @Transactional
     public Student saveStudent(Student student) {
         Person person = student.getPerson();
-        Person savedPerson = personDaoImpl.savePerson(person);
+        Person savedPerson = personJdbcDaoImpl.savePerson(person);
         student.setPerson(savedPerson);
 
         try {
@@ -104,7 +104,7 @@ public class StudentDaoImpl implements StudentDao {
         student.setMajor(dto.getMajor() == null ? student.getMajor() : dto.getMajor());
         student.setYear(dto.getYear() == null ? student.getYear() : dto.getYear());
 
-        Person updatedPerson = personDaoImpl.executeUpdate(person);
+        Person updatedPerson = personJdbcDaoImpl.executeUpdate(person);
         Student updatedStudent = executeUpdate(student);
 
         return updatedStudent;

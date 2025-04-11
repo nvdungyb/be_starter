@@ -4,7 +4,7 @@ import com.java.be_starter.dto.request.StudentCreationDto;
 import com.java.be_starter.dto.request.StudentUpdateDto;
 import com.java.be_starter.entity.Person;
 import com.java.be_starter.entity.Student;
-import com.java.be_starter.repository.dao.impls.jdbc_template.StudentDaoImpl;
+import com.java.be_starter.repository.dao.impls.jdbc_template.StudentJdbcDaoImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,14 +16,14 @@ import java.util.List;
 
 @SpringBootTest
 @Rollback
-public class TestStudentDaoImpl {
+public class TestStudentJdbcDaoImpl {
     @Autowired
-    private StudentDaoImpl studentDaoImpl;
+    private StudentJdbcDaoImpl studentJdbcDaoImpl;
 
     @Test
     public void testCheckExistsById() {
         long id = 16;
-        assert studentDaoImpl.existsById(id) == true;
+        assert studentJdbcDaoImpl.existsById(id) == true;
     }
 
     @Test
@@ -32,16 +32,16 @@ public class TestStudentDaoImpl {
         Student student = Student.builder()
                 .person(Person.builder()
                         .name("admin")
-                        .email("admin@gmail.com")
+                        .email("admin1@gmail.com")
                         .dob(new Date())
                         .address("Mo lao")
-                        .phone("0123456712")
+                        .phone("012326712")
                         .build())
                 .major("IT")
                 .year(4)
                 .build();
 
-        Student savedStudent = studentDaoImpl.saveStudent(student);
+        Student savedStudent = studentJdbcDaoImpl.saveStudent(student);
         System.out.println(savedStudent);
 
         assert savedStudent != null;
@@ -50,7 +50,7 @@ public class TestStudentDaoImpl {
     @Test
     public void testFindById() {
         int id = 16;
-        Student student = studentDaoImpl.findById(id);
+        Student student = studentJdbcDaoImpl.findById(id);
         System.out.println(student);
         assert student != null;
     }
@@ -61,14 +61,14 @@ public class TestStudentDaoImpl {
         StudentCreationDto dto = StudentCreationDto.builder()
                 .address("Mo lao")
                 .dob(new Date())
-                .email("admin@gmail.com")
+                .email("admin2@gmail.com")
                 .name("admin")
-                .phone("0123456712")
+                .phone("013476712")
                 .major("IT")
                 .year(3)
                 .build();
 
-        Student savedStudent = studentDaoImpl.createStudent(dto);
+        Student savedStudent = studentJdbcDaoImpl.createStudent(dto);
         System.out.println(savedStudent);
         assert savedStudent != null;
     }
@@ -87,7 +87,7 @@ public class TestStudentDaoImpl {
 
         int studentId = 16;
 
-        Student updatedStudent = studentDaoImpl.updateStudent(studentId, dto);
+        Student updatedStudent = studentJdbcDaoImpl.updateStudent(studentId, dto);
         System.out.println(updatedStudent);
         assert updatedStudent != null;
     }
@@ -95,7 +95,7 @@ public class TestStudentDaoImpl {
     @Test
     public void testGetStudentByPage() {
         int pageNo = 101;
-        List<Student> studentList = studentDaoImpl.findStudentByPage(pageNo);
+        List<Student> studentList = studentJdbcDaoImpl.findStudentByPage(pageNo);
         System.out.println(studentList.size());
         assert studentList.size() != 0;
     }
