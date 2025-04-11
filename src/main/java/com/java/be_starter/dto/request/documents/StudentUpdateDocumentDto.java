@@ -1,5 +1,6 @@
 package com.java.be_starter.dto.request.documents;
 
+import com.java.be_starter.dto.UpdateDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Builder
-public class StudentUpdateDocumentDto {
+public class StudentUpdateDocumentDto implements UpdateDto {
     private String name;
     private String phone;
     private Date dob;
