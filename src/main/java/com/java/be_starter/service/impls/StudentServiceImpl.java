@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl implements StudentService<Student, StudentCreationDto, StudentUpdateDto> {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final static int ELEMENTS_PER_PAGE = 10;
@@ -49,6 +49,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.save(student);
     }
 
+    @Override
     public Student updateStudent(long studentId, StudentUpdateDto studentUpdateDto) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new EntityNotFoundException(String.valueOf(studentId)));

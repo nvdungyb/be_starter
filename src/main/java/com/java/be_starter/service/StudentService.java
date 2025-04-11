@@ -1,15 +1,14 @@
 package com.java.be_starter.service;
 
-import com.java.be_starter.dto.request.StudentCreationDto;
-import com.java.be_starter.dto.request.StudentUpdateDto;
-import com.java.be_starter.entity.Student;
+import com.java.be_starter.dto.CreationDto;
+import com.java.be_starter.dto.UpdateDto;
 
 import java.util.List;
 
-public interface StudentService {
-    Student createStudent(StudentCreationDto dto);
+public interface StudentService<U, V extends CreationDto, K extends UpdateDto> {
+    U createStudent(V studentCreationDto);
 
-    Student updateStudent(long studentId, StudentUpdateDto dto);
+    U updateStudent(long studentId, K studentUpdateDto);
 
-    List<Student> findStudentByPage(int pageNo);
+    List<U> findStudentByPage(int pageNo);
 }

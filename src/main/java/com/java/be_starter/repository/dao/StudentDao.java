@@ -1,13 +1,14 @@
 package com.java.be_starter.repository.dao;
 
-import com.java.be_starter.entity.Student;
+import com.java.be_starter.dto.CreationDto;
+import com.java.be_starter.dto.UpdateDto;
 import com.java.be_starter.service.StudentService;
 
-public interface StudentDao extends StudentService {
+public interface StudentDao<T, V extends CreationDto, K extends UpdateDto> extends StudentService<T, V, K> {
     boolean existsById(long id);
 
-    Student saveStudent(Student student);
+    T saveStudent(T student);
 
-    Student findById(long id);
-
+    T findById(long id);
 }
+
