@@ -5,9 +5,11 @@ import com.java.be_starter.dto.request.StudentUpdateDto;
 import com.java.be_starter.entity.Person;
 import com.java.be_starter.entity.Student;
 import com.java.be_starter.repository.dao.impls.jdbc_template.StudentJdbcDaoImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,8 @@ import java.util.List;
 public class TestStudentJdbcDaoImpl {
     @Autowired
     private StudentJdbcDaoImpl studentJdbcDaoImpl;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @Test
     public void testCheckExistsById() {
@@ -32,10 +36,10 @@ public class TestStudentJdbcDaoImpl {
         Student student = Student.builder()
                 .person(Person.builder()
                         .name("admin")
-                        .email("admin1@gmail.com")
+                        .email("admin22@gmail.com")
                         .dob(new Date())
                         .address("Mo lao")
-                        .phone("012326712")
+                        .phone("012326812")
                         .build())
                 .major("IT")
                 .year(4)
@@ -49,21 +53,21 @@ public class TestStudentJdbcDaoImpl {
 
     @Test
     public void testFindById() {
-        int id = 16;
+        Long id = 17l;
         Student student = studentJdbcDaoImpl.findById(id);
         System.out.println(student);
         assert student != null;
     }
 
     @Test
-    @Transactional
+//    @Transactional
     public void testCreateStudent() {
         StudentCreationDto dto = StudentCreationDto.builder()
                 .address("Mo lao")
                 .dob(new Date())
-                .email("admin2@gmail.com")
+                .email("admin23@gmail.com")
                 .name("admin")
-                .phone("013476712")
+                .phone("013976789")
                 .major("IT")
                 .year(3)
                 .build();
@@ -85,7 +89,7 @@ public class TestStudentJdbcDaoImpl {
                 .year(4)
                 .build();
 
-        int studentId = 16;
+        Long studentId = 16L;
 
         Student updatedStudent = studentJdbcDaoImpl.updateStudent(studentId, dto);
         System.out.println(updatedStudent);
@@ -98,5 +102,24 @@ public class TestStudentJdbcDaoImpl {
         List<Student> studentList = studentJdbcDaoImpl.findStudentByPage(pageNo);
         System.out.println(studentList.size());
         assert studentList.size() != 0;
+    }
+
+    @Test
+    public void testDeleteById() {
+        Long studentId = 1036l;
+        studentJdbcDaoImpl.deleteById(studentId);
+        assert studentJdbcDaoImpl.existsById(studentId) == false;
+    }
+
+    @AfterEach
+    public void tearDown() {
+        String studentEmail = "admin23@gmail.com";
+        String deleteStudentSql = "DELETE s FROM student s " +
+                "INNER JOIN person p ON s.person_id = p.id " +
+                "WHERE p.email = ?";
+
+        String deletePersonSql = "DELETE s FROM person s WHERE s.email = ?";
+        jdbcTemplate.update(deleteStudentSql, studentEmail);
+        jdbcTemplate.update(deletePersonSql, studentEmail);
     }
 }
