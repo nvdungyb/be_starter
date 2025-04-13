@@ -14,4 +14,6 @@ public interface SubjectService {
     List<Subject> findByPage(int pageNo);
 
     void deleteSubject(long id);
+
+    Subject findSubjectById(long id);
 }

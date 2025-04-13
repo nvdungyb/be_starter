@@ -56,6 +56,20 @@ public class SubjectController {
                         .build());
     }
 
+    @GetMapping("/api/subjects/{id}")
+    public ResponseEntity<ApiResponse<?>> getSubjectById(@PathVariable("id") long subjectId, HttpServletRequest request) {
+        Subject subject = subjectService.findSubjectById(subjectId);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.builder()
+                        .timestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                        .status(200)
+                        .message(String.format("Subject with id %s found", subjectId))
+                        .data(subjectMapper.toDto(subject))
+                        .path(request.getRequestURI())
+                        .build());
+    }
+
     @GetMapping("/api/subjects")
     public ResponseEntity<ApiResponse<?>> getFirsPageSubjects(HttpServletRequest request) {
         return getSubjectsByPage(1, request);

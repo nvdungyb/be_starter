@@ -9,7 +9,11 @@ import com.java.be_starter.repository.SubjectRepository;
 import com.java.be_starter.service.SubjectService;
 import com.java.be_starter.utils.mapper.SubjectMapper;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class SubjectServiceImpl implements SubjectService {
     private final SubjectRepository subjectRepository;
@@ -43,6 +48,7 @@ public class SubjectServiceImpl implements SubjectService {
         return savedSubject;
     }
 
+    @CachePut(value = "subjectCache", key = "#subjectId")
     public Subject updateSubject(long subjectId, SubjectUpdateDto subjectUpdateDto) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new EntityNotFoundException(String.valueOf(subjectId)));
@@ -60,7 +66,15 @@ public class SubjectServiceImpl implements SubjectService {
 
     // Đảm bảo không có cascade delete không mong muốn.
     @Transactional
+    @CacheEvict(value = "subjectCache", key = "#subjectId")
     public void deleteSubject(long subjectId) {
         subjectRepository.deleteById(subjectId);
+    }
+
+    @Cacheable(value = "subjectCache", key = "#subjectId")
+    public Subject findSubjectById(long subjectId) {
+        log.info("Retrieving subject with id {} in database", subjectId);
+        return subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Subject with id %s not found", subjectId)));
     }
 }
