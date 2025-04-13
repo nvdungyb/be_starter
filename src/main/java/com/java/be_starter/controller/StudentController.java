@@ -56,6 +56,20 @@ public class StudentController {
                 .build());
     }
 
+    @GetMapping("/api/students/{id}")
+    public ResponseEntity<ApiResponse<?>> getStudentById(@PathVariable("id") Long studentId, HttpServletRequest request) {
+
+        Student student = studentService.findStudentById(studentId);
+
+        return ResponseEntity.ok().body(ApiResponse.builder()
+                .timestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                .status(200)
+                .data(studentMapper.toDto(student))
+                .message("Updated student successfully")
+                .path(request.getRequestURI())
+                .build());
+    }
+
     @GetMapping("/api/students")
     public ResponseEntity<ApiResponse<?>> getFirstPageStudents(HttpServletRequest request) {
         return getStudentByPage(1, request);

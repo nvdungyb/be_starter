@@ -10,6 +10,9 @@ import com.java.be_starter.repository.StudentRepository;
 import com.java.be_starter.service.StudentService;
 import com.java.be_starter.utils.mapper.StudentMapper;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,8 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
-public class StudentServiceImpl implements StudentService<Student, StudentCreationDto, StudentUpdateDto> {
+public class StudentServiceImpl implements StudentService<Student, StudentCreationDto, StudentUpdateDto, Long> {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final static int ELEMENTS_PER_PAGE = 10;
@@ -50,7 +54,8 @@ public class StudentServiceImpl implements StudentService<Student, StudentCreati
     }
 
     @Override
-    public Student updateStudent(long studentId, StudentUpdateDto studentUpdateDto) {
+    @CachePut(value = "studentCache", key = "#studentId")
+    public Student updateStudent(Long studentId, StudentUpdateDto studentUpdateDto) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new EntityNotFoundException(String.valueOf(studentId)));
 
@@ -66,10 +71,6 @@ public class StudentServiceImpl implements StudentService<Student, StudentCreati
         return saveStudent(student);
     }
 
-    public List<Student> findAllStudent() {
-        return (List<Student>) studentRepository.findAll();
-    }
-
     public List<Student> findStudentByPage(int pageId) {
         // we can pass sort detail in Pageable
 //        Pageable pageableWithSort = PageRequest.of(pageId - 1, ELEMENTS_PER_PAGE, Sort.by("major"));
@@ -77,5 +78,13 @@ public class StudentServiceImpl implements StudentService<Student, StudentCreati
         Page<Student> page = studentRepository.findAll(pageable);
 
         return page.getContent();
+    }
+
+    @Override
+    @Cacheable(value = "studentCache", key = "#studentId")
+    public Student findStudentById(Long studentId) {
+        log.info("Fetching student from database for id {}", studentId);
+        return studentRepository.findById(studentId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Student with id %s not found ", studentId)));
     }
 }

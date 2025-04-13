@@ -11,4 +11,6 @@ public interface StudentService<U, V extends CreationDto, K extends UpdateDto, T
     U updateStudent(T studentId, K studentUpdateDto);
 
     List<U> findStudentByPage(int pageNo);
+
+    U findStudentById(T studentId);
 }
