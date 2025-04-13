@@ -57,6 +57,21 @@ public class TeacherController {
                         .build());
     }
 
+    @GetMapping("/api/teachers/{id}")
+    public ResponseEntity<ApiResponse<?>> getTeacherById(@PathVariable("id") long teacherId, HttpServletRequest request) {
+
+        Teacher teacher = teacherService.findTeacherById(teacherId);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.builder()
+                        .timestamp(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                        .status(200)
+                        .data(teacherMapper.toDto(teacher))
+                        .message("Get teacher successfully!")
+                        .path(request.getRequestURI())
+                        .build());
+    }
+
     @GetMapping("/api/teachers")
     public ResponseEntity<ApiResponse<?>> getAllTeachers(HttpServletRequest request) {
         return getTeacherByPage(1, request);

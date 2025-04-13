@@ -10,7 +10,10 @@ import com.java.be_starter.repository.TeacherRepository;
 import com.java.be_starter.service.TeacherService;
 import com.java.be_starter.utils.mapper.TeacherMapper;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.dialect.lock.OptimisticEntityLockException;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
@@ -43,6 +47,7 @@ public class TeacherServiceImpl implements TeacherService {
         return savedTeacher;
     }
 
+    @CachePut(value = "teacherCache", key = "#teacherId")
     public Teacher updateTeacher(long teacherId, TeacherUpdateDto teacherUpdateDto) {
         Teacher teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new EntityNotFoundException(String.valueOf(teacherId)));
@@ -67,5 +72,12 @@ public class TeacherServiceImpl implements TeacherService {
         Pageable page = PageRequest.of(pageNo - 1, ELEMENTS_PER_PAGE);
         Page<Teacher> pageTeacher = teacherRepository.findAll(page);
         return pageTeacher.getContent();
+    }
+
+    @Cacheable(value = "teacherCache", key = "#teacherId")
+    public Teacher findTeacherById(long teacherId) {
+        log.info("Retrieve teacher with id {} in database", teacherId);
+        return teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Teacher with id %s not found", teacherId)));
     }
 }

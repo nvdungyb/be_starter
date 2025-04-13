@@ -12,4 +12,6 @@ public interface TeacherService {
     Teacher updateTeacher(long id, TeacherUpdateDto dto);
 
     List<Teacher> findTeacherByPage(int pageNo);
+
+    Teacher findTeacherById(long id);
 }
